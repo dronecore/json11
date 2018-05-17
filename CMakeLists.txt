@@ -52,6 +52,11 @@ if (JSON11_BUILD_TESTS)
   target_link_libraries(json11_test json11)
 endif()
 
-install(TARGETS json11 DESTINATION lib/${CMAKE_LIBRARY_ARCHITECTURE})
-install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/json11.hpp" DESTINATION include/${CMAKE_LIBRARY_ARCHITECTURE})
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/json11.pc" DESTINATION lib/${CMAKE_LIBRARY_ARCHITECTURE}/pkgconfig)
+# We only need to install json11 if we're building the mission plugin
+# statically because in that case libjson11.a does not get included in
+# dronecore_mission.a.
+if (PLUGIN_LIBRARY_TYPE STREQUAL "STATIC")
+    install(TARGETS json11 DESTINATION lib/${CMAKE_LIBRARY_ARCHITECTURE})
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/json11.hpp" DESTINATION include/${CMAKE_LIBRARY_ARCHITECTURE})
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/json11.pc" DESTINATION lib/${CMAKE_LIBRARY_ARCHITECTURE}/pkgconfig)
+endif()
